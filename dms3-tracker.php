@@ -3,7 +3,7 @@
  * Plugin Name: DeMomentSomTres Tracker
  * Plugin URI: http://DeMomentSomTres.com
  * Description: Implementa un tracker usant WordPress
- * Version: 1.0
+ * Version: 1.1
  * Author: Marc Queralt
  * Author URI: http://DeMomentSomTres.com
  */
@@ -53,7 +53,28 @@ function dms3_tracking_posttype() {
 
 }
 
+/**
+ * @since 1.1
+ */
+function dms3_tracking_add_metaboxes() {
+        add_meta_box(
+            'dms3_tracking',
+            __( 'Pretty Print', 'dms3_tracker' ),
+            'dms3_tracking_custom_box',
+            'dms3_tracking'
+        );
+}
+
+/**
+ * @since 1.1
+ */
+function dms3_tracking_custom_box($post) {
+    echo '<pre>';
+    print_r(json_decode($post->post_content));
+    echo '</pre>';
+}
+        
 // Hook into the 'init' action
 add_action( 'init', 'dms3_tracking_posttype', 0 );
-
+add_action( 'add_meta_boxes', 'dms3_tracking_add_metaboxes' ); //+1.1
 ?>

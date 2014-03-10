@@ -29,6 +29,9 @@ Es pot verificar el correcte funcionament del component invocant el fitxer test.
 === 1.0 ===
 Primera versió
 
+=== 1.1 ===
+Show tracking data in a non JSON Format
+
 
 == Upgrade Notice ==
 TBD
