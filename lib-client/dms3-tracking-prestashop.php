@@ -1,4 +1,5 @@
 <?php
+
 /*
  * DeMomentSomTres Tracking Library for Prestahop
  * Plugin usage tracking
@@ -21,13 +22,11 @@ endif;
 if (!class_exists('DeMomentSomTres_Tracking')) {
 
     class DeMomentSomTres_Tracking {
-        
-        var $info = array();
 
         /**
          * Class constructor
          */
-        function __construct() {
+        public function __construct() {
             
         }
 
@@ -36,19 +35,24 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
          * @param mixed $info
          * @param string $package
          */
-        function tracking($event = 'GenericEvent') {
+        public function tracking($event = 'GenericEvent', $info = array()) {
 
+            $context = Context::getContext();
             $package = 'Prestashop';
-            $info = self::$info;
-//            print_r($_SERVER);
-//            exit;
+
             $hash = md5($_SERVER['SERVER_NAME']);
+
             $data = array(
                 'site' => array(
                     'hash' => $hash,
                     'system' => $package,
+                    'directory' => $context->shop->physical_uri,
+                    'version' => _PS_VERSION_,
                     'event' => $event,
+                    'language' => $context->language->iso_code,
                 ),
+                'modules' => Module::getModulesInstalled(),
+                'theme' => $context->shop->theme_name,
                 'data' => $info,
             );
             $args = array(
@@ -62,24 +66,19 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
                     'content' => http_build_query($args),
                 ),
             );
-//            print_r($options);
             $context = stream_context_create($options);
             $response = file_get_contents('http://dms3.cat/tracking/tracking.php', false, $context);
-//            print_r($response);
+            return true;
         }
 
-        function add_info($data) {            
-            self::$info[] = $data;
-        }
     }
 
-    $demomentsomtres_tracking = new DeMomentSomTres_Tracking();
 }
 
 // Example call to import information into DeMomentSomTres_Tracking() using the new DMS3Tracking Hook
 function hookDMS3Tracking($params) {
-    global $demomentsomtres_tracking;
     $data = array();
-    $demomentsomtres_tracking.add_info($data);
+    $demomentsomtres_tracking->add_info($data);
 }
+
 ?>
