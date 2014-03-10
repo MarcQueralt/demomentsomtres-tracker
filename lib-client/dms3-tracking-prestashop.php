@@ -51,9 +51,9 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
                     'event' => $event,
                     'language' => $context->language->iso_code,
                 ),
+                'data' => $info,
                 'modules' => Module::getModulesInstalled(),
                 'theme' => $context->shop->theme_name,
-                'data' => $info,
             );
             $args = array(
                 'body' => $data
