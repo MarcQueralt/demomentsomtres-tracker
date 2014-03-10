@@ -110,6 +110,7 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
                         'multisite' => is_multisite(),
                         'users' => $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users INNER JOIN $wpdb->usermeta ON ({$wpdb->users}.ID = {$wpdb->usermeta}.user_id) WHERE 1 = 1 AND ( {$wpdb->usermeta}.meta_key = %s )", 'wp_' . $blog_id . '_capabilities')),
                         'lang' => get_locale(),
+                        'directory' => dirname(__FILE__),
                     ),
                     'pts' => $pts,
                     'comments' => array(
@@ -160,7 +161,6 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
 //}
 //
 //add_filter('demomentsomtres_tracking_filters', 'wpseo_tracking_additions');
-
 //// include only file
 //if (!defined('ABSPATH')) {
 //  die();

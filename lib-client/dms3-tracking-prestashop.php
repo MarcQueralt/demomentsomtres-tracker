@@ -1,17 +1,15 @@
 <?php
-
 /*
- * DeMomentSomTres Tracking Library
+ * DeMomentSomTres Tracking Library for Prestahop
  * Plugin usage tracking
- * Based on Yoast_Tracking
+ * Inspired on Yoast_Tracking
  */
 
 // include only file
-// * TODO Evitar la crida directa 
-//if (!defined('ABSPATH')) {
-//    header('HTTP/1.0 403 Forbidden');
-//    die();
-//}
+if (!defined('_PS_VERSION_')):
+    header('HTTP/1.0 403 Forbidden');
+    die();
+endif;
 
 /**
  * Class that creates the tracking functionality for WP SEO, as the core class might be used in more plugins,
@@ -23,6 +21,8 @@
 if (!class_exists('DeMomentSomTres_Tracking')) {
 
     class DeMomentSomTres_Tracking {
+        
+        var $info = array();
 
         /**
          * Class constructor
@@ -36,8 +36,10 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
          * @param mixed $info
          * @param string $package
          */
-        function tracking($info = array(), $package = 'Unspecified', $event = 'GenericEvent') {
+        function tracking($event = 'GenericEvent') {
 
+            $package = 'Prestashop';
+            $info = self::$info;
 //            print_r($_SERVER);
 //            exit;
             $hash = md5($_SERVER['SERVER_NAME']);
@@ -46,7 +48,6 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
                     'hash' => $hash,
                     'system' => $package,
                     'event' => $event,
-                    'directory' => dirname(__FILE__),
                 ),
                 'data' => $info,
             );
@@ -67,8 +68,18 @@ if (!class_exists('DeMomentSomTres_Tracking')) {
 //            print_r($response);
         }
 
+        function add_info($data) {            
+            self::$info[] = $data;
+        }
     }
 
     $demomentsomtres_tracking = new DeMomentSomTres_Tracking();
+}
+
+// Example call to import information into DeMomentSomTres_Tracking() using the new DMS3Tracking Hook
+function hookDMS3Tracking($params) {
+    global $demomentsomtres_tracking;
+    $data = array();
+    $demomentsomtres_tracking.add_info($data);
 }
 ?>
